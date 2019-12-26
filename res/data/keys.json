@@ -1,43 +1,53 @@
 [
   {
-    "path": "stars:>1",
-    "name": "ALL",
-    "short_name": "ALL",
-    "checked": true
+    "path":"stars:>1",
+    "name":"ALL",
+    "short_name":"ALL",
+    "checked":true
   },
   {
-    "path": "Android",
-    "name": "Android",
-    "checked": true
+    "path":"react-native",
+    "name":"React Native",
+    "checked":true
   },
   {
-    "path": "iOS",
-    "name": "iOS",
-    "checked": true
+    "path":"vue",
+    "name":"vue",
+    "checked":true
   },
   {
-    "path": "react-native",
-    "name": "React Native",
-    "checked": false
+    "path":"flutter",
+    "name":"flutter",
+    "checked":false
   },
   {
-    "path": "MySQL",
-    "name": "MySQL",
-    "checked": false
+    "path":"MySQL",
+    "name":"MySQL",
+    "checked":true
   },
   {
-    "path": " AngularJS",
-    "name": " AngularJS",
-    "checked": false
+    "path":"react",
+    "name":"React",
+    "checked":true
   },
   {
-    "path": " jQuery",
-    "name": " jQuery",
-    "checked": false
+    "path":"java",
+    "name":"Java",
+    "checked":false
   },
   {
-    "path": " react",
-    "name": " React",
-    "checked": false
+    "path":"redis",
+    "name":"redis",
+    "checked":false
+  },
+  {
+    "path":"Android",
+    "name":"Android",
+    "checked":false
+  },
+  {
+    "path":"iOS",
+    "name":"iOS",
+    "checked":false
   }
 ]

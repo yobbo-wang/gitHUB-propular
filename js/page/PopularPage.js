@@ -2,11 +2,9 @@
  * PopularPage
  * @flow
  */
-
 'use strict';
 import React, {Component} from 'react';
 import {
-  FlatList,
   StyleSheet,
   RefreshControl,
   TouchableHighlight,
@@ -30,6 +28,7 @@ import {FLAG_TAB} from './HomePage';
 import LanguageDao, {FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import Utils from '../util/Utils';
+import ListView from 'deprecated-react-native-listview';
 
 const API_URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
@@ -57,7 +56,7 @@ export default class PopularPage extends Component {
   }
 
   onSubscriber = (preTab, currentTab) => {
-    const changedValues = this.props.homeComponent.changedValues;
+    var changedValues = this.props.homeComponent.changedValues;
     if (changedValues.my.themeChange && preTab.styles) {
       this.setState({
         theme: preTab,
@@ -160,7 +159,7 @@ export default class PopularPage extends Component {
             />
           )}>
           {this.state.languages.map((result, i, arr) => {
-            const language = arr[i];
+            var language = arr[i];
             return language && language.checked ? (
               <PopularTab
                 key={i}
@@ -172,7 +171,7 @@ export default class PopularPage extends Component {
           })}
         </ScrollableTabView>
       ) : null;
-    const statusBar = {
+    var statusBar = {
       backgroundColor: this.state.theme.themeColor,
     };
     let navigationBar = (
@@ -210,16 +209,18 @@ class PopularTab extends Component {
       isLoading: false,
       isLoadingFail: false,
       favoritKeys: [],
-      dataSource: [],
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2,
+      }),
       filter: '',
       theme: this.props.theme,
     };
   }
 
   onSubscriber = (preTab, currentTab) => {
-    const changedValues = this.props.homeComponent.changedValues;
+    var changedValues = this.props.homeComponent.changedValues;
     if (changedValues.my.themeChange && preTab.styles) {
-      this.updateState({
+      this.setState({
         theme: preTab,
       });
       this.updateFavorite(); //更新favoriteIcon
@@ -253,7 +254,7 @@ class PopularTab extends Component {
     //更新ProjectItem的Favorite状态
     let projectModels = [];
     let items = this.items;
-    for (let i = 0, len = items.length; i < len; i++) {
+    for (var i = 0, len = items.length; i < len; i++) {
       projectModels.push(
         new ProjectModel(
           items[i],
@@ -261,10 +262,10 @@ class PopularTab extends Component {
         ),
       );
     }
-    this.setState({
+    this.updateState({
       isLoading: false,
       isLoadingFail: false,
-      dataSource: projectModels,
+      dataSource: this.getDataSource(projectModels),
     });
   }
 
@@ -274,7 +275,7 @@ class PopularTab extends Component {
       .getFavoriteKeys()
       .then(keys => {
         if (keys) {
-          this.setState({favoritKeys: keys});
+          this.updateState({favoritKeys: keys});
         }
         this.flushFavoriteState();
       })
@@ -335,8 +336,12 @@ class PopularTab extends Component {
     this.loadData(true);
   }
 
+  getDataSource(items) {
+    return this.state.dataSource.cloneWithRows(items);
+  }
+
   onSelectRepository(projectModel) {
-    const item = projectModel.item;
+    var item = projectModel.item;
     this.props.navigator.push({
       title: item.full_name,
       component: RepositoryDetail,
@@ -357,29 +362,31 @@ class PopularTab extends Component {
       favoriteDao.removeFavoriteItem(item.id.toString());
     }
   }
-  renderRow = projectModel => {
+  renderRow(projectModel, sectionID, rowID) {
+    let {navigator} = this.props;
     return (
       <RepositoryCell
         key={projectModel.item.id}
         onSelect={() => this.onSelectRepository(projectModel)}
         theme={this.state.theme}
+        {...{navigator}}
         projectModel={projectModel}
         onFavorite={(item, isFavorite) => this.onFavorite(item, isFavorite)}
       />
     );
-  };
+  }
 
   render() {
-    const content = (
-      <FlatList
+    var content = (
+      <ListView
         ref="listView"
         style={styles.listView}
-        renderItem={({item}) => this.renderRow(item)}
-        ListFooterComponent={() => {
+        renderRow={e => this.renderRow(e)}
+        renderFooter={() => {
           return <View style={{height: 50}} />;
         }}
-        data={this.state.dataSource}
-        keyExtractor={({item}) => item.id + ''}
+        enableEmptySections={true}
+        dataSource={this.state.dataSource}
         refreshControl={
           <RefreshControl
             refreshing={this.state.isLoading}
@@ -404,7 +411,7 @@ class PopularTab extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

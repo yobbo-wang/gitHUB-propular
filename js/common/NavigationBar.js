@@ -38,7 +38,7 @@ export default class NavigationBar extends Component {
     };
   }
   leftView() {
-    var leftView = this.props.leftButtonTitle ? (
+    const leftView = this.props.leftButtonTitle ? (
       <Text style={styles.title}>{this.props.leftButtonTitle}</Text>
     ) : null;
     return (
@@ -161,14 +161,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    // backgroundColor: 'red',
     height: Platform.OS === 'ios' ? NAV_BAR_HEIGHT_IOS : NAV_BAR_HEIGHT_ANDROID,
-    // shadowOffset:{
-    //     width: 1,
-    //     height: 0.5,
-    // },
-    // shadowColor: '#55ACEE',
-    // shadowOpacity: 0.8,
   },
   navBarTitleContainer: {
     alignItems: 'center',

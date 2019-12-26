@@ -25,7 +25,7 @@ export default class LanguageDao {
           return;
         }
         if (!result) {
-          var data =
+          let data =
             this.flag === FLAG_LANGUAGE.flag_language ? langsData : keysData;
           this.save(data);
           resolve(data);
@@ -40,7 +40,7 @@ export default class LanguageDao {
     });
   }
   save(objectData) {
-    var stringData = JSON.stringify(objectData);
+    let stringData = JSON.stringify(objectData);
     AsyncStorage.setItem(this.flag, stringData, (error, result) => {});
   }
 }

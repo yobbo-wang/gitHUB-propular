@@ -117,7 +117,7 @@ export default class MyPage extends Component {
   }
 
   render() {
-    var navigationBar = (
+    const navigationBar = (
       <NavigationBar style={this.state.theme.styles.navBar} title="My" />
     );
     return (

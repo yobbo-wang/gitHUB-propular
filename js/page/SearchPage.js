@@ -29,6 +29,8 @@ import ViewUtils from '../util/ViewUtils';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import makeCancelable from '../util/Cancelable';
 import ProjectModel from '../model/ProjectModel';
+import {isNotch} from '../util/deviceInfo';
+
 const API_URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 export default class SearchPage extends Component {
@@ -72,7 +74,7 @@ export default class SearchPage extends Component {
   }
 
   onSelectRepository(projectModel) {
-    var item = projectModel.item;
+    const item = projectModel.item;
     this.props.navigator.push({
       title: item.full_name,
       component: RepositoryDetail,
@@ -110,7 +112,8 @@ export default class SearchPage extends Component {
         name: key,
         checked: true,
       };
-      this.keys.unshift(key);
+      // this.keys.unshift(key); // 入首队列
+      this.keys.push(key); // 入末队列
       this.languageDao.save(this.keys);
       this.refs.toast.show(
         this.state.inputKey + ' saved successfully.',
@@ -348,7 +351,7 @@ export default class SearchPage extends Component {
 }
 const styles = StyleSheet.create({
   statusBar: {
-    height: 20,
+    height: isNotch ? 50 : 20,
   },
   title: {
     fontSize: 18,

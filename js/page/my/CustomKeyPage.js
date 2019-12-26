@@ -43,6 +43,12 @@ export default class CustomKeyPage extends Component {
     this.languageDao
       .fetch()
       .then(data => {
+        // 初始化选中
+        data.forEach((item, index) => {
+          this.setState({
+            [index]: item.checked,
+          });
+        });
         this.setState({
           dataArray: data,
         });
@@ -52,8 +58,13 @@ export default class CustomKeyPage extends Component {
       });
   }
 
-  onClick(data) {
-    if (!this.isRemoveKey) data.checked = !data.checked;
+  onClick(data, index) {
+    if (!this.isRemoveKey) {
+      data.checked = !data.checked;
+      this.setState({
+        [index]: data.checked,
+      });
+    }
     ArrayUtils.updateArray(this.changeValues, data);
   }
 
@@ -106,15 +117,17 @@ export default class CustomKeyPage extends Component {
   }
 
   renderView() {
-    if (!this.state.dataArray || this.state.dataArray.length === 0) return;
-    var len = this.state.dataArray.length;
-    var views = [];
-    for (var i = 0, l = len - 2; i < l; i += 2) {
+    if (!this.state.dataArray || this.state.dataArray.length === 0) {
+      return;
+    }
+    const len = this.state.dataArray.length;
+    let views = [];
+    for (let i = 0, l = len - 2; i < l; i += 2) {
       views.push(
         <View key={i}>
           <View style={styles.item}>
-            {this.renderCheckBox(this.state.dataArray[i])}
-            {this.renderCheckBox(this.state.dataArray[i + 1])}
+            {this.renderCheckBox(this.state.dataArray[i], i)}
+            {this.renderCheckBox(this.state.dataArray[i + 1], i + 1)}
           </View>
           <View style={styles.line} />
         </View>,
@@ -124,23 +137,22 @@ export default class CustomKeyPage extends Component {
       <View key={len - 1}>
         <View style={styles.item}>
           {len % 2 === 0
-            ? this.renderCheckBox(this.state.dataArray[len - 2])
+            ? this.renderCheckBox(this.state.dataArray[len - 2], len - 2)
             : null}
-          {this.renderCheckBox(this.state.dataArray[len - 1])}
+          {this.renderCheckBox(this.state.dataArray[len - 1], len - 1)}
         </View>
       </View>,
     );
     return views;
   }
 
-  renderCheckBox(data) {
+  renderCheckBox(data, index) {
     let leftText = data.name;
-    let isChecked = this.isRemoveKey ? false : data.checked;
     return (
       <CheckBox
         style={{flex: 1, padding: 10}}
-        onClick={() => this.onClick(data)}
-        isChecked={isChecked}
+        onClick={() => this.onClick(data, index)}
+        isChecked={this.state[index]}
         leftText={leftText}
         checkedImage={
           <Image
